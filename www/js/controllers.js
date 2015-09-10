@@ -1,28 +1,28 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
-
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+.controller('CityCtrl', function($scope, Cities) {
+  $scope.cities = Cities.all();
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
+.controller('CityDetailCtrl', function($scope, $http, $stateParams, $ionicPopup) {
+  $scope.data = {};
+  $scope.id = $stateParams.id;
+  $scope.showAlert = function(title, text) {
+    $ionicPopup.alert({
+      title: title,
+      template: text
+    });
   };
+  $scope.refresh = function() {
+    $http.get('http://api.openweathermap.org/data/2.5/forecast/daily?id='+$scope.id)
+        .success(function(data, status, headers, config) {
+          $scope.data = data;
+          $scope.$broadcast('scroll.refreshComplete');
+        })
+        .error(function(data, status, headers, config) {
+          $scope.showAlert(status, data);
+          $scope.$broadcast('scroll.refreshComplete');
+        });
+  };
+  $scope.refresh();
 });

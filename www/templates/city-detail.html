@@ -1,5 +1,7 @@
 <ion-view view-title="{{data.city.name}}">
   <ion-content class="padding">
+    <ion-refresh pulling-text="Тяни!" on-refresh="refresh()">
+    </ion-refresh>
     <h2>Город: {{data.city.name}}</h2>
     <p>Страна: {{data.city.country}}</p>
     <p>Население: {{data.city.population}} чел.</p>
